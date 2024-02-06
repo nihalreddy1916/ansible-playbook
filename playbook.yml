@@ -1,0 +1,24 @@
+
+- name: Create branches
+  hosts: webserver
+  become: true
+  vars:
+    branches:
+      - apache
+      - dockers
+      - terraform
+
+  tasks:
+    - name: Create branches
+      file:
+        path: "/tmp/apache"
+        state: directory
+      loop: "{{ branches }}"
+
+    - name: Install Apache2 on the 'apache' branch
+      when: item == 'apache'
+      apt:
+        name: apache2
+        state: present
+      loop: "{{ branches }}"
+
